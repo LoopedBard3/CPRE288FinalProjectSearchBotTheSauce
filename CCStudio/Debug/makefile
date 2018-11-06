@@ -13,6 +13,8 @@ ORDERED_OBJS += \
 "./button.obj" \
 "./lcd.obj" \
 "./main.obj" \
+"./movementCommands.obj" \
+"./open_interface.obj" \
 "./timer.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
 "./uart.obj" \
@@ -160,8 +162,8 @@ CPRE288FinalProjectSearchBotTheSpice.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "button.obj" "lcd.obj" "main.obj" "timer.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" 
-	-$(RM) "button.d" "lcd.d" "main.d" "timer.d" "tm4c123gh6pm_startup_ccs.d" "uart.d" 
+	-$(RM) "button.obj" "lcd.obj" "main.obj" "movementCommands.obj" "open_interface.obj" "timer.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" 
+	-$(RM) "button.d" "lcd.d" "main.d" "movementCommands.d" "open_interface.d" "timer.d" "tm4c123gh6pm_startup_ccs.d" "uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

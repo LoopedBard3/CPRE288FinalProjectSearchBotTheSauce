@@ -21,9 +21,10 @@ void uart_init(void);
 
 void uart_sendChar(char data);
 
-int uart_receive(void);
+char uart_receive(void);
 
 void uart_sendStr(const char *data);
 
+void uart_sendBits(char data);
 
 #endif /* UART_H_ */

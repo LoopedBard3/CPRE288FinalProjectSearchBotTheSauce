@@ -3,6 +3,8 @@
 #include "lcd.h"
 #include "uart.h"
 #include "driverlib/interrupt.h"
+#include "open_interface.h"
+//#include "movementCommands.h"
 #include <math.h>
 
 unsigned pulse_period;
@@ -220,7 +222,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     setup_servo();      //Set up the Servo
     lcd_init();     //initialize the lcd screen
     double degrees = 0;    //Initial degrees to go to
-    int IR_change = 15;    //Change in IR distance needed to count as an edge of an object
+    int IR_change = 15; //Change in IR distance needed to count as an edge of an object
     int measuring = 0;  //Whether or not we are measuring an object
     int obj_count = 0;  //Number of objects
     int obj_width = 0;  //Width of the object
@@ -234,50 +236,85 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     objects[smallest_ind].measured_width = 0;   //Initialize the first object
     objects[smallest_ind].distance = 0;
     move_servo(degrees);    //Move the servo to the initial system
-    for (degrees = 0; degrees <= 180; degrees += 2) //Go through all degrees
+    char character = 0;
+    oi_t *sensor_data = oi_alloc();
+    oi_init(sensor_data);
+
+    //Update the sensor data
+    oi_update(sensor_data);
+    while (1)
     {
-        move_servo(degrees);
-        sonar_cycles = ping_read();
-        sonar_dist = cycles2dist(sonar_cycles);
-        prev_IR_dist = IR_dist;
-        IR_dist = get_IR_dist();
-        sprintf(string, "%-8.0f %-17d %-10d\n", degrees, IR_dist, sonar_dist);
-        if (prev_IR_dist - IR_dist > IR_change)
+        obj_count = 0;
+        for (degrees = 0; degrees <= 180; degrees += 2) //Go through all degrees
         {
-            obj_width = 0;
-            measuring = 1;
-        }
-        else if (measuring)
-        {
-            obj_width += 2;
-        }
-        if (IR_dist - prev_IR_dist > IR_change && measuring == 1)
-        {
-            measuring = 0;
-
-            if (obj_width > 10)
+            if (!(UART1_FR_R & UART_FR_RXFE))
             {
-                // Carry out size calculation here
-                objects[obj_count].distance = prev_IR_dist;
-                objects[obj_count].measured_width = obj_width;
-                objects[obj_count].calculated_width = (int) (sin(obj_width)
-                        * prev_IR_dist);
-                objects[obj_count].final_deg = degrees;
-                if (obj_count > 0
-                        && objects[smallest_ind].measured_width
-                                > objects[obj_count].measured_width)
+                character = uart_receive();
+                switch (character)
                 {
-                    smallest_ind = obj_count;
+                case 'w':
+                    oi_setWheels(250, 250);
+                    break;
+                case 's':
+                    oi_setWheels(-250, -250);
+                    break;
+                case 'a':
+                    oi_setWheels(100, -100);
+                    break;
+                case 'd':
+                    oi_setWheels(-100, 100);
+                    break;
+                case 'x':
+                    oi_setWheels(0, 0);
+                    break;
                 }
-                obj_count++;
             }
+            move_servo(degrees);
+            sonar_cycles = ping_read();
+            sonar_dist = cycles2dist(sonar_cycles);
+            prev_IR_dist = IR_dist;
+            IR_dist = get_IR_dist();
+            sprintf(string, "%-8.0f %-17d %-10d\n", degrees, IR_dist,
+                    sonar_dist);
+            if (prev_IR_dist - IR_dist > IR_change)
+            {
+                obj_width = 0;
+                measuring = 1;
+            }
+            else if (measuring)
+            {
+                obj_width += 2;
+            }
+            if (IR_dist - prev_IR_dist > IR_change && measuring == 1)
+            {
+                measuring = 0;
 
+                if (obj_width > 10)
+                {
+                    // Carry out size calculation here
+                    objects[obj_count].distance = prev_IR_dist;
+                    objects[obj_count].measured_width = obj_width;
+                    objects[obj_count].calculated_width = (int) (sin(obj_width)
+                            * prev_IR_dist);
+                    objects[obj_count].final_deg = degrees;
+                    if (obj_count > 0
+                            && objects[smallest_ind].measured_width
+                                    > objects[obj_count].measured_width)
+                    {
+                        smallest_ind = obj_count;
+                    }
+                    obj_count++;
+                }
+
+            }
+            lcd_printf(
+                    "number of objects: %dsmallest index: %d\nwidth: %d\ndistance: %d",
+                    obj_count, smallest_ind,
+                    objects[smallest_ind].measured_width,
+                    objects[smallest_ind].distance);
+
+            uart_sendStr(string);
+            timer_waitMillis(40);
         }
-        lcd_printf("number of objects: %dsmallest index: %d\nwidth: %d\ndistance: %d", obj_count,
-                   smallest_ind, objects[smallest_ind].measured_width, objects[smallest_ind].distance);
-
-        uart_sendStr(string);
-        timer_waitMillis(80);
     }
-    move_servo(objects[smallest_ind].final_deg - (objects[smallest_ind].measured_width)); //Move servo to the middle of the smallest object
 }

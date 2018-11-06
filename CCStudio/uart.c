@@ -49,7 +49,16 @@ void uart_sendChar(char data)
      UART1_DR_R = data;
 }
 
-int uart_receive(void)
+void uart_sendBits(char data)
+{
+    while(UART1_FR_R & 0x20)
+    {
+    }
+     //send data
+     UART1_DR_R = data;
+}
+
+char uart_receive(void)
 {
     char data = 0;
      //wait to receive
