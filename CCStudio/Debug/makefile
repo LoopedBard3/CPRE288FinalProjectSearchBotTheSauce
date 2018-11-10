@@ -10,10 +10,13 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./ContactSensors.obj" \
+"./IRSensor.obj" \
+"./Servo.obj" \
+"./SonarSensor.obj" \
 "./button.obj" \
 "./lcd.obj" \
 "./main.obj" \
-"./movementCommands.obj" \
 "./open_interface.obj" \
 "./timer.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
@@ -162,8 +165,8 @@ CPRE288FinalProjectSearchBotTheSpice.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "button.obj" "lcd.obj" "main.obj" "movementCommands.obj" "open_interface.obj" "timer.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" 
-	-$(RM) "button.d" "lcd.d" "main.d" "movementCommands.d" "open_interface.d" "timer.d" "tm4c123gh6pm_startup_ccs.d" "uart.d" 
+	-$(RM) "ContactSensors.obj" "IRSensor.obj" "Servo.obj" "SonarSensor.obj" "button.obj" "lcd.obj" "main.obj" "open_interface.obj" "timer.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" 
+	-$(RM) "ContactSensors.d" "IRSensor.d" "Servo.d" "SonarSensor.d" "button.d" "lcd.d" "main.d" "open_interface.d" "timer.d" "tm4c123gh6pm_startup_ccs.d" "uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

@@ -10,13 +10,12 @@ public class Window{
 	static JButton btnLEFT;
 	static JButton btnRIGHT;
 
-
 	public static void main(String[] args){
 		createWindow();	
 	}
 
 	private static void createWindow(){
-		JFrame frame = new JFrame(gc);
+		JFrame frame = new JFrame();
 		frame.setTitle("RombaCop");
 		frame.setSize(600, 400);
 
