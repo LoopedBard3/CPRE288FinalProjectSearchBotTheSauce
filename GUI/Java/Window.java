@@ -50,6 +50,30 @@ public class Window{
 		btnBACKWARDS= new JButton("BACKWARDS");
 		btnLEFT = new JButton("LEFT");
 		btnRIGHT =  new JButton("RIGHT");
-	}
 
+		btnFORWARDS.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("W");
+			}
+		}); 
+	
+		btnBACKWARDS.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+			
+				System.out.println("S");
+			}
+		}); 
+		
+		btnLEFT.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("A");
+			}
+		}); 
+		
+		btnRIGHT.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("D");
+			}
+		}); 
+	}
 }
