@@ -28,6 +28,7 @@ main.obj: ../ContactSensors.h
 main.obj: ../IRSensor.h
 main.obj: ../Servo.h
 main.obj: ../SonarSensor.h
+main.obj: ../music.h
 
 ../main.c: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/stdbool.h: 
@@ -57,3 +58,4 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/machine/_limits.h:
 ../IRSensor.h: 
 ../Servo.h: 
 ../SonarSensor.h: 
+../music.h: 

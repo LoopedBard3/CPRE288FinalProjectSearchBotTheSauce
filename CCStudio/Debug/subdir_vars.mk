@@ -16,6 +16,7 @@ C_SRCS += \
 ../button.c \
 ../lcd.c \
 ../main.c \
+../music.c \
 ../open_interface.c \
 ../timer.c \
 ../tm4c123gh6pm_startup_ccs.c \
@@ -29,6 +30,7 @@ C_DEPS += \
 ./button.d \
 ./lcd.d \
 ./main.d \
+./music.d \
 ./open_interface.d \
 ./timer.d \
 ./tm4c123gh6pm_startup_ccs.d \
@@ -42,6 +44,7 @@ OBJS += \
 ./button.obj \
 ./lcd.obj \
 ./main.obj \
+./music.obj \
 ./open_interface.obj \
 ./timer.obj \
 ./tm4c123gh6pm_startup_ccs.obj \
@@ -55,6 +58,7 @@ OBJS__QUOTED += \
 "button.obj" \
 "lcd.obj" \
 "main.obj" \
+"music.obj" \
 "open_interface.obj" \
 "timer.obj" \
 "tm4c123gh6pm_startup_ccs.obj" \
@@ -68,6 +72,7 @@ C_DEPS__QUOTED += \
 "button.d" \
 "lcd.d" \
 "main.d" \
+"music.d" \
 "open_interface.d" \
 "timer.d" \
 "tm4c123gh6pm_startup_ccs.d" \
@@ -81,6 +86,7 @@ C_SRCS__QUOTED += \
 "../button.c" \
 "../lcd.c" \
 "../main.c" \
+"../music.c" \
 "../open_interface.c" \
 "../timer.c" \
 "../tm4c123gh6pm_startup_ccs.c" \

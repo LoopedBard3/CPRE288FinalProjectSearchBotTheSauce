@@ -16,5 +16,7 @@ bool cliffMiddleLeft();
 bool cliffFrontLeft();
 bool cliffFrontRight();
 bool cliffMiddleRight();
+bool sensorTrip();
+bool boundaryHit();
 
 
