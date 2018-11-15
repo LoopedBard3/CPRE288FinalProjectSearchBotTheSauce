@@ -1,5 +1,6 @@
 #include "IRSensor.h"
 
+//Gets the IR reading distance
 int get_IR_dist()
 {
     int fifoResult = 0;
