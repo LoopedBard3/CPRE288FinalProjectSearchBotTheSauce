@@ -1,15 +1,33 @@
 #include "music.h"
 
-// oi_t *sensor_data;  //Holder for the sensor data
+/**
+ oi_t *sensor_data;
 
-// void setup_musicSensor(oi_t *sensor_for_data){
-//     sensor_data = sensor_for_data;
-// }
+ void setup_musicSensor(oi_t *sensor_for_data){
+ sensor_data = sensor_for_data;
+ }
+ */
 
-//Load our songs onto the roomba
-void loadSongs(){
-       unsigned char MarioLen = 30; //Length of the Mario song
-       unsigned char MarioNotes[30]     = {55, 55, 55, 51, 58, 55, 51, 58, 55, 0,  62, 62, 62, 63, 58, 54, 51, 58, 55}; //Notes for the Mario song, 60 is middle C
-       unsigned char MarioDurations[30] = {32, 32, 32, 20, 12, 32, 20, 12, 32, 32, 32, 32, 32, 20, 12, 32, 20, 12, 32}; //Duration for each note in the Mario song
-       oi_loadSong(MARIO_VICTORY, MarioLen, MarioNotes, MarioDurations); //Loads the arrays onto the Roomba
+void loadSongs()
+{
+    //SHARK LEN is actually supposed to be 30
+    unsigned char SharkLen = 5;
+    unsigned char SharkNotes[30] = { 62, 64, 67, 67, 67, 67, 67, 67, 62, 64, 67,
+                                     67, 67, 67, 67, 67, 62, 64, 67, 67, 67, 67,
+                                     67, 67, 67, 67, 66 };
+    unsigned char SharkDurations[30] = { 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+                                         12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+                                         12, 12, 12, 12, 12, 12, 12 };
+    oi_loadSong(BABY_SHARK, SharkLen, SharkNotes, SharkDurations);
+
+    unsigned char MarioLen = 36;
+    unsigned char MarioNotes[36] = { 64, 64, 64, 60, 64, 67, 72, 67, 64, 69, 71,
+                                     70, 69, 67, 72, 76, 81, 77, 79, 76, 76, 77,
+                                     74, 72, 67, 64, 69, 71, 70, 69, 67, 64, 62,
+                                     72, 72, 72 };
+unsigned char MarioDurations[36] = {   24, 24, 24, 12, 12, 12,
+    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12}
+;
+oi_loadSong(MARIO_THEME, MarioLen, MarioNotes, MarioDurations);
 }

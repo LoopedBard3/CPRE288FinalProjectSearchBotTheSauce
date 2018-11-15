@@ -7,7 +7,8 @@
 
 #include "open_interface.h"
 
-#define MARIO_VICTORY 0
+#define BABY_SHARK 0
+#define MARIO_THEME 2
 
-void setup_musicSensor(oi_t *sensor_for_data);
+//void setup_musicSensor(oi_t *sensor_for_data);
 void loadSongs();

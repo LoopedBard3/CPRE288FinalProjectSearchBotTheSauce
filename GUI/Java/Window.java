@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class Window{
@@ -12,9 +14,18 @@ public class Window{
 	static JButton btnSTOP;
 	static JButton btnQUIT;
 	static JButton btnGO;
+	static JButton btnSCAN;
+	static JButton btnMUSIC;
+	static SocketController client;
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException {
+		client = new SocketController("192.168.1.1", 288); //Starts the controller without being setup in a different class
 		createWindow();	
+		while(true) {
+			if(client.hasData()) {
+				System.out.println(client.getData());
+			}
+		}
 	}
 
 	private static void createWindow(){
@@ -24,6 +35,12 @@ public class Window{
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent){
+				try {
+					client.closeConnection();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.exit(0);
 			}
 		});
@@ -47,6 +64,8 @@ public class Window{
 		panel.add(btnSTOP);
 		panel.add(btnQUIT);
 		panel.add(btnGO);
+		panel.add(btnSCAN);
+		panel.add(btnMUSIC);
 
 		return panel;
 	}
@@ -59,47 +78,106 @@ public class Window{
 		btnSTOP =  new JButton("STOP");
 		btnQUIT = new JButton("QUIT");
 		btnGO= new JButton("GO");
-
+		btnSCAN = new JButton("SCAN");
+		btnMUSIC = new JButton("MUSIC");
+		
 		btnFORWARDS.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("W");
+				try {
+					client.sendString("W");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		}); 
 	
 		btnBACKWARDS.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 			
-				System.out.println("S");
+				try {
+					client.sendString("S");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		}); 
 		
 		btnLEFT.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("A");
+				try {
+					client.sendString("A");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		}); 
 		
 		btnRIGHT.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("D");
+				try {
+					client.sendString("D");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		});
 		
 		btnSTOP.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("X");
+				try {
+					client.sendString("X");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		});
 		
 		btnQUIT.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("Q");
+				try {
+					client.sendString("Q");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		});
 		
 		btnGO.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("G");
+				try {
+					client.sendString("G");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
+			}
+		});
+		
+		btnSCAN.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				try {
+					client.sendString("L");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
+			}
+		});
+		
+		btnMUSIC.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				try {
+					client.sendString("P");
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
 			}
 		});
 	}
