@@ -62,6 +62,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     oi_setLeds(1, 1, 160, 200); //Set the Roomba's LED
     bool active = 0;    //Boolean that holds whether or not the roomba's movement should be active
     loadSongs();    //Load our songs onto the Roomba
+    int tripOn = 0;
     while (1)   //While forever, or until shutoff
     {
         if(active){ //If we are active
@@ -71,10 +72,10 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                         switch (character)  //Do something depending the character
                         {
                         case 'W':   //If W is recieved, set the wheel speeds
-                            left_wheel_speed = uart_receive();  //Get the left wheel speed from UART
-                            right_wheel_speed = uart_receive(); //Get the right wheel speed from UART
-                            oi_setWheels((int) right_wheel_speed * 4,
-                                         (int) left_wheel_speed * 4);   //Set the wheel speeds
+                            //left_wheel_speed = uart_receive();  //Get the left wheel speed from UART
+                            //right_wheel_speed = uart_receive(); //Get the right wheel speed from UART
+                            uart_sendStr("F");
+                            oi_setWheels(200, 200);   //Set the wheel speeds
                             break;
 
                         case 'X':   //Stop the Robot
@@ -100,7 +101,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                         }
 
                     }
-                    if(sensorTrip()){   //If one of the sensors are tripped, backup and stop
+                    if(sensorTrip() && tripOn != 0){   //If one of the sensors are tripped, backup and stop
                         sprintf(string, "T\n");   //Store that the sensors have tripped
                         oi_setWheels(-400, -400);   //Go backwards
                         uart_sendStr(string);   //Send that the sensors have tripped
@@ -111,13 +112,13 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                     sonar_dist = cycles2dist(sonar_cycles); //Turns the cycles to a sonar distance 
                     IR_dist = get_IR_dist(); //Gets the IR distance being read
                     updateContactSensors(); //Update the contact sensors
-                    if(IR_dist < sensorTripDistance || sonar_dist < sensorTripDistance){ //If we are too close to an object
+                    if((IR_dist < sensorTripDistance || sonar_dist < sensorTripDistance) && tripOn != 0){ //If we are too close to an object
                     //Make an if statement so we can move backwards, just not forwards
                         oi_setWheels(0, 0); //Stop, don't move forward
                         sprintf(string, "C\n"); //Store that we have stopped
                         uart_sendStr(string); //Send that we have stopped
                     }
-                    sprintf(string, "%-10d %-10d\n", IR_dist, sonar_dist);  //Save the distances to a string
+                    sprintf(string, "%d %d\n", IR_dist, sonar_dist);  //Save the distances to a string
                     uart_sendStr(string);   //Send the distances
                     timer_waitMillis(20); //Wait a second
         }else{  //If the robot is not active
