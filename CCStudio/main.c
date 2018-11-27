@@ -11,14 +11,14 @@
 #include "music.h"
 
 //Variable declarations
-char left_wheel_speed = 50;  //Holder for the left wheels speed
-char right_wheel_speed = 50; //Holder for the right wheel speed
+int left_wheel_speed = 200;  //Holder for the left wheels speed
+int right_wheel_speed = 200; //Holder for the right wheel speed
 char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop 
 
 int IR_dist = 50;        //IR Distance
 int sonar_dist = 50;     //The sonar distance
 int sonar_cycles = 0;   //The number of cycles between the sonar interrupts
-char string[50];    //String to be printed to the UART;
+char string[30];    //String to be printed to the UART;
 
 //Method declarations
 void scan();
@@ -35,7 +35,7 @@ void scan()
         sonar_cycles = ping_read(); //Gets the number of cycles between the sonar signal being sent and recieved
         sonar_dist = cycles2dist(sonar_cycles); //Turns the cycles to a sonar distance 
         IR_dist = get_IR_dist();    //Gets the IR distance being read
-        sprintf(string, "%-8.0f %-17d %-10d\n", degrees, IR_dist, sonar_dist); //Sends the degrees and two distances to the UART string holder
+        sprintf(string, "%.0f %d %d\n", degrees, IR_dist, sonar_dist); //Sends the degrees and two distances to the UART string holder
 
         uart_sendStr(string);   //Sends the string over UART
         timer_waitMillis(40);   //Waits some time
@@ -46,7 +46,7 @@ void scan()
 int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
 {
     uart_init();    //uart_sendStr()
-    uart_sendStr("\nDegrees  IR Distance (cm)  Sonar Distance (cm)\n");
+    uart_sendStr("IR(cm) Sonar(cm)\n");
     setup_PING();        //set up the roomba
     setup_IR();         //Set up the IR sensor
     setup_servo();      //Set up the Servo
@@ -62,7 +62,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     bool active = 0; //Boolean that holds whether or not the roomba's movement should be active
     loadSongs();    //Load our songs onto the Roomba
     oi_setWheels(0, 0);
-    int counter = 0;
+    int tripOn = 0;
     while (1)   //While forever, or until shutoff
     {
         if (active)
@@ -74,22 +74,20 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 //Do something depending the character
                 {
                 case 'W':   //If W is recieved, set the wheel speeds
-                    //left_wheel_speed = uart_receive();  //Get the left wheel speed from UART
-                    //right_wheel_speed = uart_receive(); //Get the right wheel speed from UART
-                    oi_setWheels((int) right_wheel_speed * 4,
-                                 (int) left_wheel_speed * 4); //Set the wheel speeds
+                    oi_setWheels(right_wheel_speed,
+                                 left_wheel_speed); //Set the wheel speeds
                     break;
                 case 'S':
-                    oi_setWheels((int) right_wheel_speed * -4,
-                                 (int) left_wheel_speed * -4);
+                    oi_setWheels(right_wheel_speed * -1,
+                                 left_wheel_speed * -1);
                     break;
                 case 'D':
-                    oi_setWheels((int) right_wheel_speed * -1,
-                                 (int) left_wheel_speed * 1);
+                    oi_setWheels(right_wheel_speed * -1,
+                                 left_wheel_speed);
                     break;
                 case 'A':
-                    oi_setWheels((int) right_wheel_speed * 1,
-                                 (int) left_wheel_speed * -1);
+                    oi_setWheels(right_wheel_speed,
+                                 left_wheel_speed * -1);
                     break;
                 case 'X':   //Stop the Robot
                     oi_setWheels(0, 0);
@@ -115,7 +113,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
 
             }
             updateContactSensors(); //Update the contact sensors
-            if (sensorTrip())
+            if (sensorTrip() && tripOn != 0)
             {   //If one of the sensors are tripped, backup and stop
                 sprintf(string, "T\n");   //Store that the sensors have tripped
                 oi_setWheels(-400, -400);   //Go backwards
@@ -123,24 +121,21 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 timer_waitMillis(500);  //Wait until we have backed up enough
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
-            if (counter % 1000 == 0)
-            { //If we are too close to an object
-              //Make an if statement so we can move backwards, just not forwards
-                sonar_cycles = ping_read(); //Gets the number of cycles between the sonar signal being sent and recieved
-                sonar_dist = cycles2dist(sonar_cycles); //Turns the cycles to a sonar distance
-                if (sonar_dist < sensorTripDistance)
-                {
-                    oi_setWheels(0, 0); //Stop, don't move forward
-                    sprintf(string, "C\n"); //Store that we have stopped
-                    uart_sendStr(string); //Send that we have stopped
-                }
+
+            //If we are too close to an object
+            //Make an if statement so we can move backwards, just not forwards
+            sonar_cycles = ping_read(); //Gets the number of cycles between the sonar signal being sent and recieved
+            sonar_dist = cycles2dist(sonar_cycles); //Turns the cycles to a sonar distance
+            IR_dist = get_IR_dist(); // Get the IR distance
+            if (sonar_dist < sensorTripDistance && tripOn != 0)
+            {
+                oi_setWheels(0, 0); //Stop, don't move forward
+                sprintf(string, "C\n"); //Store that we have stopped
+                uart_sendStr(string); //Send that we have stopped
             }
-            //sprintf(string, "%d %d\n", IR_dist, sonar_dist);  //Save the distances to a string
-            counter++;
-            /**
-             uart_sendStr(string);   //Send the distances
-             timer_waitMillis(50); //Wait a second
-             */
+            sprintf(string, "%d %d\n", IR_dist, sonar_dist); //Save the distances to a string
+            uart_sendStr(string);   //Send the distances
+            timer_waitMillis(20); //Wait a second
         }
         else
         {  //If the robot is not active
