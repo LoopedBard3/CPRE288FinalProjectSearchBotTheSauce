@@ -16,20 +16,23 @@ public class Window{
 	static JButton btnGO;
 	static JButton btnSCAN;
 	static JButton btnMUSIC;
+	static JFrame frame;
+	static JFrame frame2;
 	static SocketController client;
 
 	public static void main(String[] args) throws IOException {
 		client = new SocketController("192.168.1.1", 288); //Starts the controller without being setup in a different class
 		createWindow();	
-		while(true) {
-			if(client.hasData()) {
-				System.out.println(client.getData());
-			}
-		}
+		createWindow2();
+//		while(true) {
+//			if(client.hasData()) {
+//				System.out.println(client.getData());
+//			}
+//		}
 	}
 
 	private static void createWindow(){
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.setTitle("RombaCop");
 		frame.setSize(600, 400);
 
@@ -38,39 +41,77 @@ public class Window{
 				try {
 					client.closeConnection();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.exit(0);
 			}
 		});
-		frame.add(createPanel());
+		frame.add(createButtonPanel());
 
 		frame.setVisible(true);
 	}
+	
+	private static void createWindow2(){
+		frame2 = new JFrame();
+		frame2.setTitle("RombaCopHeat");
+		frame2.setSize(600, 400);
 
-	private static JPanel createPanel(){
+		frame2.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent windowEvent){
+				try {
+					client.closeConnection();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				System.exit(0);
+			}
+		});
+		frame2.add(createHeatPanel());
+
+		frame2.setVisible(true);
+	}
+
+	private static JPanel createButtonPanel(){
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.darkGray);
 		panel.setSize(500, 300);
-		//panel.setLayout(new FlowLayout());
 		panel.setLayout(new GridLayout (3,3));
 		
 		createBtns();
 
-		//panel.add();
 		panel.add(btnSTOP);
 		panel.add(btnFORWARDS);
 		panel.add(btnSCAN);
-		//panel.add();
 		panel.add(btnLEFT);
 		panel.add(btnBACKWARDS);
 		panel.add(btnRIGHT);
 		panel.add(btnGO);
 		panel.add(btnQUIT);
 		panel.add(btnMUSIC);
-		//panel.add();
 
+		return panel;
+	}
+	
+	private static JPanel createHeatPanel() {
+		JPanel panel = new JPanel() {
+				protected void paintComponent (Graphics g) {
+					super.paintComponent(g);
+					for (int i =0; i<= 500; i += 2) {
+						switch(i%3) {
+						case 0:
+							g.setColor(Color.RED);
+							break;
+						case 1:
+							g.setColor(Color.WHITE);
+							break;
+						case 2:
+							g.setColor(Color.GREEN);
+							break;
+						}
+						g.drawLine(i,  0, i, 300);
+					}
+				};
+		};
+		
 		return panel;
 	}
 
@@ -90,7 +131,6 @@ public class Window{
 				try {
 					client.sendString("W");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -102,7 +142,6 @@ public class Window{
 				try {
 					client.sendString("S");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -113,7 +152,6 @@ public class Window{
 				try {
 					client.sendString("A");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -124,7 +162,6 @@ public class Window{
 				try {
 					client.sendString("D");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -133,9 +170,10 @@ public class Window{
 		btnSTOP.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				try {
+					frame.setVisible(false);
+					frame2.setVisible(true);
 					client.sendString("X");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -146,7 +184,6 @@ public class Window{
 				try {
 					client.sendString("Q");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -157,7 +194,6 @@ public class Window{
 				try {
 					client.sendString("G");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -168,7 +204,6 @@ public class Window{
 				try {
 					client.sendString("L");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
@@ -179,7 +214,6 @@ public class Window{
 				try {
 					client.sendString("P");
 				} catch (IOException f) {
-					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
 			}
