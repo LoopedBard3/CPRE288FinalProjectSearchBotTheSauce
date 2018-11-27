@@ -53,6 +53,7 @@ public class SocketController {
     // Send a character to the bot
     public void sendString(String cmd) throws IOException {
 		out.writeChars(cmd);
+		out.flush();
     }
     
     // Closes connections with the bot
