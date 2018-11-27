@@ -53,19 +53,23 @@ public class Window{
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.darkGray);
 		panel.setSize(500, 300);
-		panel.setLayout(new FlowLayout());
-
+		//panel.setLayout(new FlowLayout());
+		panel.setLayout(new GridLayout (3,3));
+		
 		createBtns();
 
-		panel.add(btnFORWARDS);
-		panel.add(btnBACKWARDS);
-		panel.add(btnLEFT);
-		panel.add(btnRIGHT);
+		//panel.add();
 		panel.add(btnSTOP);
-		panel.add(btnQUIT);
-		panel.add(btnGO);
+		panel.add(btnFORWARDS);
 		panel.add(btnSCAN);
+		//panel.add();
+		panel.add(btnLEFT);
+		panel.add(btnBACKWARDS);
+		panel.add(btnRIGHT);
+		panel.add(btnGO);
+		panel.add(btnQUIT);
 		panel.add(btnMUSIC);
+		//panel.add();
 
 		return panel;
 	}
