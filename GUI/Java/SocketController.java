@@ -7,7 +7,7 @@ import java.io.*;
 public class SocketController {
     private Socket socket            = null; 
     private BufferedReader  botDataInput = null;
-    private DataOutputStream out     = null; 
+    private PrintWriter out     = null;
     
     /**
      * Constructor for the socket controller
@@ -26,7 +26,7 @@ public class SocketController {
             botDataInput = new BufferedReader(new InputStreamReader(socket.getInputStream())); //The stream of characters and data coming in from the robot
   
             // sends output to the socket 
-            out    = new DataOutputStream(socket.getOutputStream());  //Sends the streams to the robot
+            out    = new PrintWriter(new DataOutputStream(socket.getOutputStream()));  //Sends the streams to the robot
         } 
         catch(UnknownHostException u) 
         { 
@@ -52,7 +52,8 @@ public class SocketController {
     
     // Send a character to the bot
     public void sendString(String cmd) throws IOException {
-		out.writeChars(cmd);
+		out.print(cmd);
+		out.flush();
     }
     
     // Closes connections with the bot
