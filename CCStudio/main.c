@@ -13,7 +13,8 @@
 //Variable declarations
 int left_wheel_speed = 200;  //Holder for the left wheels speed
 int right_wheel_speed = 200; //Holder for the right wheel speed
-char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop 
+char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop
+int timer_30degree_calibration = 100; 
 
 int IR_dist = 50;        //IR Distance
 int sonar_dist = 50;     //The sonar distance
@@ -84,10 +85,14 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 case 'D':
                     oi_setWheels(right_wheel_speed * -1,
                                  left_wheel_speed);
+					timer_waitMillis(timer_30degree_calibration);
+					oi_setWheels(0, 0);
                     break;
                 case 'A':
                     oi_setWheels(right_wheel_speed,
                                  left_wheel_speed * -1);
+					timer_waitMillis(timer_30degree_calibration);
+					oi_setWheels(0, 0);
                     break;
                 case 'X':   //Stop the Robot
                     oi_setWheels(0, 0);
