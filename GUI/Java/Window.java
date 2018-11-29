@@ -1,10 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class Window{
+public class Window {
 
 	static GraphicsConfiguration gc;
 	static JButton btnFORWARDS;
@@ -18,30 +19,69 @@ public class Window{
 	static JButton btnMUSIC;
 	static JFrame frame;
 	static JFrame frame2;
+	static JFrame frame3;
+	static Graphics2D heatGraphics;
 	static SocketController client;
+	static JTextField txt;
 
 	public static void main(String[] args) throws IOException {
-		client = new SocketController("192.168.1.1", 288); //Starts the controller without being setup in a different class
-		createWindow();	
-		createWindow2();
-//		while(true) {
-//			if(client.hasData()) {
-//				System.out.println(client.getData());
-//			}
-//		}
+
+		String clientData;
+		String[] clientDataArray;
+
+		createWindow();
+		//createHeatWindow();
+		createInfoWindow();
+
+		try {
+			client = new SocketController("192.168.1.1", 288); // Starts the controller without being setup in a
+																// different class
+		} catch (Exception e) {
+			client = null;
+		}
+		JLabel label1;
+		label1 = new JLabel("", SwingConstants.CENTER);
+		label1.setFont(new Font(label1.getName(), Font.PLAIN, 36));
+		frame3.add(label1);
+		ArrayList<Integer[]> intArr = new ArrayList();
+		while (true && client != null) {
+			if (client.hasData()) {
+				clientData = client.getData();
+				clientDataArray = clientData.split(" ");
+				if (clientDataArray.length == 3) {
+					intArr.clear();
+					if(frame2 != null) frame2.dispose();
+					while(clientDataArray.length == 3) {
+						Integer[] temp = {Integer.parseInt(clientDataArray[0]), Integer.parseInt(clientDataArray[1])};
+						intArr.add(temp);
+						while(!client.hasData()) {}
+						clientData = client.getData();
+						clientDataArray = clientData.split(" ");
+						System.out.println(clientData);
+					}
+					createHeatWindow(intArr);
+					System.out.println("Adding to panel!");
+				}
+				label1.setText(clientData);
+				System.out.println(clientData);
+			}
+		}
 	}
 
-	private static void createWindow(){
+
+	private static void createWindow() {
 		frame = new JFrame();
 		frame.setTitle("RombaCop");
 		frame.setSize(600, 400);
 
 		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent windowEvent){
-				try {
-					client.closeConnection();
-				} catch (IOException e) {
-					e.printStackTrace();
+			public void windowClosing(WindowEvent windowEvent) {
+				if (client != null) {
+					try {
+						client.closeConnection();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 				System.exit(0);
 			}
@@ -50,32 +90,50 @@ public class Window{
 
 		frame.setVisible(true);
 	}
-	
-	private static void createWindow2(){
+
+	private static void createHeatWindow(ArrayList<Integer[]> data) {
 		frame2 = new JFrame();
 		frame2.setTitle("RombaCopHeat");
-		frame2.setSize(600, 400);
+		frame2.setSize(1000, 400);
 
 		frame2.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent windowEvent){
-				try {
-					client.closeConnection();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				System.exit(0);
+			public void windowClosing(WindowEvent windowEvent) {
+				frame2.dispose();
 			}
 		});
-		frame2.add(createHeatPanel());
+		JPanel heatPanel = createHeatPanel(data);
+		frame2.add(heatPanel);
 
 		frame2.setVisible(true);
 	}
 
-	private static JPanel createButtonPanel(){
+	private static void createInfoWindow() {
+		frame3 = new JFrame();
+		frame3.setTitle("RombaCopInfo");
+		frame3.setSize(600, 400);
+
+		frame3.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent windowEvent) {
+				if (client != null) {
+					try {
+						client.closeConnection();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				System.exit(0);
+			}
+
+		});
+		
+		frame3.setVisible(true);
+	}
+
+	private static JPanel createButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.setSize(500, 300);
-		panel.setLayout(new GridLayout (3,3));
-		
+		panel.setLayout(new GridLayout(3, 3));
+
 		createBtns();
 
 		panel.add(btnSTOP);
@@ -90,75 +148,80 @@ public class Window{
 
 		return panel;
 	}
-	
-	private static JPanel createHeatPanel() {
+
+	private static JPanel createHeatPanel(ArrayList<Integer[]> data) {
+		if(data != null) {
 		JPanel panel = new JPanel() {
-				protected void paintComponent (Graphics g) {
-					super.paintComponent(g);
-					for (int i =0; i<= 500; i += 2) {
-						switch(i%3) {
-						case 0:
-							g.setColor(Color.RED);
-							break;
-						case 1:
-							g.setColor(Color.WHITE);
-							break;
-						case 2:
-							g.setColor(Color.GREEN);
-							break;
-						}
-						g.drawLine(i,  0, i, 300);
-					}
-				};
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				heatGraphics = (Graphics2D) g;
+
+				for (int i = 0; i < data.size(); i++) {
+					heatGraphics.setColor(Color.getHSBColor(map(data.get(i)[1].floatValue(), 0f, 150f, 0f, 0.75f), 1f, 1f));
+					heatGraphics.setStroke(new BasicStroke(8f));
+					heatGraphics.drawLine(720 - data.get(i)[0].intValue()*4, 0, 720 - data.get(i)[0].intValue()*4, 1000);
+				}
+			};
 		};
-		
+		return panel;
+	}
+		return new JPanel();
+	}
+
+	private static JPanel createInfoPanel() {
+		JPanel panel = new JPanel();
+
 		return panel;
 	}
 
-	private static void createBtns(){
-		btnFORWARDS= new JButton("FORWARDS");
-		btnBACKWARDS= new JButton("BACKWARDS");
+	private static float map(float x, float in_min, float in_max, float out_min, float out_max) {
+		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
+
+	private static void createBtns() {
+		btnFORWARDS = new JButton("FORWARDS");
+		btnBACKWARDS = new JButton("BACKWARDS");
 		btnLEFT = new JButton("LEFT");
-		btnRIGHT =  new JButton("RIGHT");
-		btnSTOP =  new JButton("STOP");
+		btnRIGHT = new JButton("RIGHT");
+		btnSTOP = new JButton("STOP");
 		btnQUIT = new JButton("QUIT");
-		btnGO= new JButton("GO");
+		btnGO = new JButton("GO");
 		btnSCAN = new JButton("SCAN");
 		btnMUSIC = new JButton("MUSIC");
-		
-		btnFORWARDS.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnFORWARDS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("W");
 				} catch (IOException f) {
 					f.printStackTrace();
 				}
 			}
-		}); 
-	
-		btnBACKWARDS.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-			
+		});
+
+		btnBACKWARDS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
 				try {
 					client.sendString("S");
 				} catch (IOException f) {
 					f.printStackTrace();
 				}
 			}
-		}); 
-		
-		btnLEFT.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+		});
+
+		btnLEFT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("A");
 				} catch (IOException f) {
 					f.printStackTrace();
 				}
 			}
-		}); 
-		
-		btnRIGHT.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+		});
+
+		btnRIGHT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("D");
 				} catch (IOException f) {
@@ -166,31 +229,31 @@ public class Window{
 				}
 			}
 		});
-		
-		btnSTOP.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnSTOP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
-					frame.setVisible(false);
-					frame2.setVisible(true);
+//					frame2.setVisible(true);
 					client.sendString("X");
 				} catch (IOException f) {
 					f.printStackTrace();
 				}
 			}
 		});
-		
-		btnQUIT.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnQUIT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
+//					frame.setVisible(false);
 					client.sendString("Q");
 				} catch (IOException f) {
 					f.printStackTrace();
 				}
 			}
 		});
-		
-		btnGO.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnGO.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("G");
 				} catch (IOException f) {
@@ -198,9 +261,9 @@ public class Window{
 				}
 			}
 		});
-		
-		btnSCAN.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnSCAN.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("L");
 				} catch (IOException f) {
@@ -208,9 +271,9 @@ public class Window{
 				}
 			}
 		});
-		
-		btnMUSIC.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+
+		btnMUSIC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					client.sendString("P");
 				} catch (IOException f) {

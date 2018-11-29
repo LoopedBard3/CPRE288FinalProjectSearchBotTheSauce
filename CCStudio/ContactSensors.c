@@ -21,7 +21,7 @@ bool cliffMiddleRight(){return sensor_data->cliffRight;} //Returns true if there
 
 //Returns true if any of the sensors are currently being triggered
 bool sensorTrip(){
-    return (bumperHitLeft()||bumperHitRight()||cliffMiddleLeft()||cliffMiddleRight()||cliffFrontLeft()||cliffFrontRight()||boundaryHit() );
+    return (bumperHitLeft()||bumperHitRight()||cliffMiddleLeft()||cliffMiddleRight()||cliffFrontLeft()||cliffFrontRight()||boundaryHit());
 }
 
 //Returns true if the Roomba is over a white boundary compared to the blue floors

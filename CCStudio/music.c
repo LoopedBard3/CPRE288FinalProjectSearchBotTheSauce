@@ -11,7 +11,7 @@
 void loadSongs()
 {
     //SHARK LEN is actually supposed to be 30
-    unsigned char SharkLen = 5;
+    unsigned char SharkLen = 4;
     unsigned char SharkNotes[30] = { 62, 64, 67, 67, 67, 67, 67, 67, 62, 64, 67,
                                      67, 67, 67, 67, 67, 62, 64, 67, 67, 67, 67,
                                      67, 67, 67, 67, 66 };

@@ -12,9 +12,11 @@
 
 //Variable declarations
 int left_wheel_speed = 200;  //Holder for the left wheels speed
+int left_wheel_speed_turn = 100;
 int right_wheel_speed = 200; //Holder for the right wheel speed
+int right_wheel_speed_turn = 100;
 char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop
-int timer_30degree_calibration = 100; 
+int timer_30degree_calibration = 700;
 
 int IR_dist = 50;        //IR Distance
 int sonar_dist = 50;     //The sonar distance
@@ -30,7 +32,7 @@ void scan()
     double degrees = 0;    //Initial degrees for the servo to go to
     oi_setWheels(0, 0);     //Stops the robot for scanning
     uart_sendStr("Scan:\n"); //Sends out that the folloing code will be scanning
-    for (degrees = 0; degrees <= 180; degrees += 2) //Scan through 0 to 180 degrees at 2 degree increments
+    for (degrees = 180; degrees >= 0; degrees -= 2) //Scan through 0 to 180 degrees at 2 degree increments
     {
         move_servo(degrees);    //Moves the servo to the specified degree
         sonar_cycles = ping_read(); //Gets the number of cycles between the sonar signal being sent and recieved
@@ -63,7 +65,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     bool active = 0; //Boolean that holds whether or not the roomba's movement should be active
     loadSongs();    //Load our songs onto the Roomba
     oi_setWheels(0, 0);
-    int tripOn = 0;
+    int tripOn = 1;
     while (1)   //While forever, or until shutoff
     {
         if (active)
@@ -83,14 +85,14 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                                  left_wheel_speed * -1);
                     break;
                 case 'D':
-                    oi_setWheels(right_wheel_speed * -1,
-                                 left_wheel_speed);
+                    oi_setWheels(right_wheel_speed_turn * -1,
+                                 left_wheel_speed_turn);
 					timer_waitMillis(timer_30degree_calibration);
 					oi_setWheels(0, 0);
                     break;
                 case 'A':
-                    oi_setWheels(right_wheel_speed,
-                                 left_wheel_speed * -1);
+                    oi_setWheels(right_wheel_speed_turn,
+                                 left_wheel_speed_turn * -1);
 					timer_waitMillis(timer_30degree_calibration);
 					oi_setWheels(0, 0);
                     break;
@@ -120,12 +122,29 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
             updateContactSensors(); //Update the contact sensors
             if (sensorTrip() && tripOn != 0)
             {   //If one of the sensors are tripped, backup and stop
-                sprintf(string, "T\n");   //Store that the sensors have tripped
+                if(bumperHitLeft()){
+                    sprintf(string, "BL\n");
+                }else if(bumperHitRight()){
+                    sprintf(string, "BR\n");
+                }else if(cliffMiddleLeft()){
+                    sprintf(string, "CML\n");
+                }else if(cliffMiddleRight()){
+                    sprintf(string, "CMR\n");
+                }else if(cliffFrontLeft()){
+                    sprintf(string, "CFL\n");
+                }else if(cliffFrontRight()){
+                    sprintf(string, "CFR\n");
+                }else if(boundaryHit()){
+                    sprintf(string, "BH\n");
+                }
+                   //Store that the sensors have tripped
                 oi_setWheels(-400, -400);   //Go backwards
                 uart_sendStr(string);   //Send that the sensors have tripped
                 timer_waitMillis(500);  //Wait until we have backed up enough
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
+            //Add in end sensing
+
 
             //If we are too close to an object
             //Make an if statement so we can move backwards, just not forwards
@@ -134,9 +153,12 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
             IR_dist = get_IR_dist(); // Get the IR distance
             if (sonar_dist < sensorTripDistance && tripOn != 0)
             {
-                oi_setWheels(0, 0); //Stop, don't move forward
+                oi_setWheels(-100, -100); //Stop, don't move forward
+                timer_waitMillis(200);
+                oi_setWheels(0, 0);
                 sprintf(string, "C\n"); //Store that we have stopped
                 uart_sendStr(string); //Send that we have stopped
+
             }
             sprintf(string, "%d %d\n", IR_dist, sonar_dist); //Save the distances to a string
             uart_sendStr(string);   //Send the distances

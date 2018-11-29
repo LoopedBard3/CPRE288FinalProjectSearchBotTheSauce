@@ -13,12 +13,12 @@ public class SocketController {
      * Constructor for the socket controller
      * @param address the ip address to connect to
      * @param port the port to connect to
+     * @throws IOException 
+     * @throws UnknownHostException 
      */
-    public SocketController(String address, int port) 
+    public SocketController(String address, int port) throws UnknownHostException, IOException 
     { 
         // establish a connection 
-        try
-        { 
             socket = new Socket(address, port); 
             System.out.println("Connected"); //Print connected once we are connected
   
@@ -27,15 +27,6 @@ public class SocketController {
   
             // sends output to the socket 
             out    = new PrintWriter(new DataOutputStream(socket.getOutputStream()));  //Sends the streams to the robot
-        } 
-        catch(UnknownHostException u) 
-        { 
-            System.out.println(u); 
-        } 
-        catch(IOException i) 
-        { 
-            System.out.println(i); 
-        }
     } 
     // Determine if the bot has data to transmit
     public boolean hasData() throws IOException {
