@@ -41,7 +41,7 @@ void scan()
         sprintf(string, "%.0f %d %d\n", degrees, IR_dist, sonar_dist); //Sends the degrees and two distances to the UART string holder
 
         uart_sendStr(string);   //Sends the string over UART
-        timer_waitMillis(40);   //Waits some time
+        timer_waitMillis(20);   //Waits some time
     }
     move_servo(90); //Moves the servo back to the middle
 }
@@ -65,7 +65,8 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     bool active = 0; //Boolean that holds whether or not the roomba's movement should be active
     loadSongs();    //Load our songs onto the Roomba
     oi_setWheels(0, 0);
-    int tripOn = 1;
+    int tripOn = 1; //!!!!!! VERY IMPORTANT TURN OFF FOR STATIONARY TESTING ONLY !!!!!!!
+    int winBoundHit = 0;
     while (1)   //While forever, or until shutoff
     {
         if (active)
@@ -77,24 +78,22 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 //Do something depending the character
                 {
                 case 'W':   //If W is recieved, set the wheel speeds
-                    oi_setWheels(right_wheel_speed,
-                                 left_wheel_speed); //Set the wheel speeds
+                    oi_setWheels(right_wheel_speed, left_wheel_speed); //Set the wheel speeds
                     break;
                 case 'S':
-                    oi_setWheels(right_wheel_speed * -1,
-                                 left_wheel_speed * -1);
+                    oi_setWheels(right_wheel_speed * -1, left_wheel_speed * -1);
                     break;
                 case 'D':
                     oi_setWheels(right_wheel_speed_turn * -1,
                                  left_wheel_speed_turn);
-					timer_waitMillis(timer_30degree_calibration);
-					oi_setWheels(0, 0);
+                    timer_waitMillis(timer_30degree_calibration);
+                    oi_setWheels(0, 0);
                     break;
                 case 'A':
                     oi_setWheels(right_wheel_speed_turn,
                                  left_wheel_speed_turn * -1);
-					timer_waitMillis(timer_30degree_calibration);
-					oi_setWheels(0, 0);
+                    timer_waitMillis(timer_30degree_calibration);
+                    oi_setWheels(0, 0);
                     break;
                 case 'X':   //Stop the Robot
                     oi_setWheels(0, 0);
@@ -122,29 +121,56 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
             updateContactSensors(); //Update the contact sensors
             if (sensorTrip() && tripOn != 0)
             {   //If one of the sensors are tripped, backup and stop
-                if(bumperHitLeft()){
+                if (bumperHitLeft())
+                {
                     sprintf(string, "BL\n");
-                }else if(bumperHitRight()){
-                    sprintf(string, "BR\n");
-                }else if(cliffMiddleLeft()){
-                    sprintf(string, "CML\n");
-                }else if(cliffMiddleRight()){
-                    sprintf(string, "CMR\n");
-                }else if(cliffFrontLeft()){
-                    sprintf(string, "CFL\n");
-                }else if(cliffFrontRight()){
-                    sprintf(string, "CFR\n");
-                }else if(boundaryHit()){
-                    sprintf(string, "BH\n");
                 }
-                   //Store that the sensors have tripped
+                else if (bumperHitRight())
+                {
+                    sprintf(string, "BR\n");
+                }
+                else if (cliffMiddleLeft())
+                {
+                    sprintf(string, "CML\n");
+                }
+                else if (cliffMiddleRight())
+                {
+                    sprintf(string, "CMR\n");
+                }
+                else if (cliffFrontLeft())
+                {
+                    sprintf(string, "CFL\n");
+                }
+                else if (cliffFrontRight())
+                {
+                    sprintf(string, "CFR\n");
+                }
+                //Store that the sensors have tripped
                 oi_setWheels(-400, -400);   //Go backwards
                 uart_sendStr(string);   //Send that the sensors have tripped
-                timer_waitMillis(500);  //Wait until we have backed up enough
+                timer_waitMillis(300);  //Wait until we have backed up enough
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
-            //Add in end sensing
 
+            if (winBoundaryHit() && tripOn != 0)
+            {
+                winBoundHit = 1;
+                sprintf(string, "WBH\n");
+                uart_sendStr(string);   //Send that the sensors have tripped
+            }
+            else if (boundaryHit() && tripOn != 0 && winBoundHit == 0)
+            {
+                sprintf(string, "BH\n");
+                //Store that the sensors have tripped
+                oi_setWheels(-400, -400);   //Go backwards
+                uart_sendStr(string);   //Send that the sensors have tripped
+                timer_waitMillis(300);  //Wait until we have backed up enough
+                oi_setWheels(0, 0); //Stop the robot until told how to move again
+            }
+
+
+            //Add in end sensing
+            lcd_printf("%d", sensor_data->cliffRightSignal);
 
             //If we are too close to an object
             //Make an if statement so we can move backwards, just not forwards
@@ -160,7 +186,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 uart_sendStr(string); //Send that we have stopped
 
             }
-            sprintf(string, "%d %d\n", IR_dist, sonar_dist); //Save the distances to a string
+            sprintf(string, "%d %d %d %d\n", IR_dist, sonar_dist, sensor_data->cliffLeftSignal, sensor_data->cliffRightSignal); //Save the distances to a string
             uart_sendStr(string);   //Send the distances
             timer_waitMillis(20); //Wait a second
         }
@@ -176,6 +202,5 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 oi_play_song(BABY_SHARK);
             }
         }
-
     }
 }

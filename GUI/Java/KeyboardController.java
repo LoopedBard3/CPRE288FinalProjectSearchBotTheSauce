@@ -76,7 +76,7 @@ public class KeyboardController implements KeyListener {
 
             case 'e':   //Scan Button
                 try {
-                    socket.sendString("S");
+                    socket.sendString("L");
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

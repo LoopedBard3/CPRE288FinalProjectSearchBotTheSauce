@@ -41,7 +41,6 @@ public class Window {
 		}
 
 		keyboardController = new KeyboardController(client); //Might need to figure out the order to add at.
-		frame.addKeyListener(keyboardController);
 		frame3.addKeyListener(keyboardController);
 		JLabel label1;
 		label1 = new JLabel("", SwingConstants.CENTER);
@@ -77,7 +76,6 @@ public class Window {
 		frame = new JFrame();
 		frame.setTitle("RombaCop");
 		frame.setSize(600, 400);
-
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
 				if (client != null) {
