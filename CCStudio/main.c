@@ -16,7 +16,7 @@ int left_wheel_speed_turn = 100;
 int right_wheel_speed = 200; //Holder for the right wheel speed
 int right_wheel_speed_turn = 100;
 char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop
-int timer_30degree_calibration = 700;
+int timer_30degree_calibration = 550;
 
 int IR_dist = 50;        //IR Distance
 int sonar_dist = 50;     //The sonar distance
@@ -65,7 +65,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     bool active = 0; //Boolean that holds whether or not the roomba's movement should be active
     loadSongs();    //Load our songs onto the Roomba
     oi_setWheels(0, 0);
-    int tripOn = 1; //!!!!!! VERY IMPORTANT TURN OFF FOR STATIONARY TESTING ONLY !!!!!!!
+    int tripOn = 1; //!!!!!! VERY IMPORTANT, TURN OFF FOR STATIONARY TESTING ONLY !!!!!!!
     int winBoundHit = 0;
     while (1)   //While forever, or until shutoff
     {
@@ -109,7 +109,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                     break;
 
                 case 'P':   //Play the Mario_Victory song
-                    oi_play_song(BABY_SHARK);
+                    oi_play_song(EPIC_MUSIC);
                     break;
 
                 default:
@@ -168,7 +168,6 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
 
-
             //Add in end sensing
             lcd_printf("%d", sensor_data->cliffRightSignal);
 
@@ -186,7 +185,17 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 uart_sendStr(string); //Send that we have stopped
 
             }
-            sprintf(string, "%d %d %d %d\n", IR_dist, sonar_dist, sensor_data->cliffLeftSignal, sensor_data->cliffRightSignal); //Save the distances to a string
+            if (winBoundHit == 0)
+            {
+                sprintf(string, "%d %d\n", IR_dist, sonar_dist); //Save the distances to a string
+
+            }
+            else
+            {
+                sprintf(string, "%d %d %d %d\n", IR_dist, sonar_dist,
+                        sensor_data->cliffLeftSignal,
+                        sensor_data->cliffRightSignal); //Save the distances to a string
+            }
             uart_sendStr(string);   //Send the distances
             timer_waitMillis(20); //Wait a second
         }
@@ -199,7 +208,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
             }
             if (character == 'P')
             {   //Still allow the robot to play songs
-                oi_play_song(BABY_SHARK);
+                oi_play_song(EPIC_MUSIC);
             }
         }
     }
