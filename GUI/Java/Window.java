@@ -22,13 +22,13 @@ public class Window {
 	static JFrame frame3;
 	static Graphics2D heatGraphics;
 	static SocketController client;
+	static KeyboardController keyboardController;
 	static JTextField txt;
 
 	public static void main(String[] args) throws IOException {
 
 		String clientData;
 		String[] clientDataArray;
-
 		createWindow();
 		//createHeatWindow();
 		createInfoWindow();
@@ -39,6 +39,10 @@ public class Window {
 		} catch (Exception e) {
 			client = null;
 		}
+
+		keyboardController = new KeyboardController(client); //Might need to figure out the order to add at.
+		frame.addKeyListener(keyboardController);
+		frame3.addKeyListener(keyboardController);
 		JLabel label1;
 		label1 = new JLabel("", SwingConstants.CENTER);
 		label1.setFont(new Font(label1.getName(), Font.PLAIN, 36));
@@ -103,6 +107,7 @@ public class Window {
 		});
 		JPanel heatPanel = createHeatPanel(data);
 		frame2.add(heatPanel);
+		frame2.addKeyListener(keyboardController);
 
 		frame2.setVisible(true);
 	}
