@@ -55,7 +55,7 @@ public class Window {
 					intArr.clear();
 					if(frame2 != null) frame2.dispose();
 					while(clientDataArray.length == 3) {
-						Integer[] temp = {Integer.parseInt(clientDataArray[0]), Integer.parseInt(clientDataArray[1])};
+						Integer[] temp = {Integer.parseInt(clientDataArray[0]), Integer.parseInt(clientDataArray[1]), (Integer.parseInt(clientDataArray[2]) >= 175)? 175: Integer.parseInt(clientDataArray[2])};
 						intArr.add(temp);
 						while(!client.hasData()) {}
 						clientData = client.getData();
@@ -96,7 +96,7 @@ public class Window {
 	private static void createHeatWindow(ArrayList<Integer[]> data) {
 		frame2 = new JFrame();
 		frame2.setTitle("RombaCopHeat");
-		frame2.setSize(1000, 400);
+		frame2.setSize(1000, 1000);
 
 		frame2.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
@@ -162,7 +162,9 @@ public class Window {
 				for (int i = 0; i < data.size(); i++) {
 					heatGraphics.setColor(Color.getHSBColor(map(data.get(i)[1].floatValue(), 0f, 150f, 0f, 0.75f), 1f, 1f));
 					heatGraphics.setStroke(new BasicStroke(8f));
-					heatGraphics.drawLine(720 - data.get(i)[0].intValue()*4, 0, 720 - data.get(i)[0].intValue()*4, 1000);
+					heatGraphics.drawLine(720 - data.get(i)[0].intValue()*4, 0, 720 - data.get(i)[0].intValue()*4, 500);
+					heatGraphics.setColor(Color.getHSBColor(map(data.get(i)[2].floatValue(), 0f, 180f, 0f, 0.75f), 1f, 1f));
+					heatGraphics.drawLine(720 - data.get(i)[0].intValue()*4, 500, 720 - data.get(i)[0].intValue()*4, 1000);
 				}
 			};
 		};
