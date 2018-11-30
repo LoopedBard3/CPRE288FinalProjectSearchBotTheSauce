@@ -16,7 +16,7 @@ int left_wheel_speed_turn = 100;
 int right_wheel_speed = 200; //Holder for the right wheel speed
 int right_wheel_speed_turn = 100;
 char sensorTripDistance = 20; //If an object is detected closer than this number (centimeters) by the Sonar or IR sensor, causes the robot to stop
-int timer_30degree_calibration = 550;
+int timer_30degree_calibration = 450;
 
 int IR_dist = 50;        //IR Distance
 int sonar_dist = 50;     //The sonar distance
@@ -32,6 +32,8 @@ void scan()
     double degrees = 0;    //Initial degrees for the servo to go to
     oi_setWheels(0, 0);     //Stops the robot for scanning
     uart_sendStr("Scan:\n"); //Sends out that the folloing code will be scanning
+    move_servo(180);
+    timer_waitMillis(15);   //Waits some time
     for (degrees = 180; degrees >= 0; degrees -= 2) //Scan through 0 to 180 degrees at 2 degree increments
     {
         move_servo(degrees);    //Moves the servo to the specified degree
@@ -41,7 +43,7 @@ void scan()
         sprintf(string, "%.0f %d %d\n", degrees, IR_dist, sonar_dist); //Sends the degrees and two distances to the UART string holder
 
         uart_sendStr(string);   //Sends the string over UART
-        timer_waitMillis(20);   //Waits some time
+        timer_waitMillis(5);   //Waits some time
     }
     move_servo(90); //Moves the servo back to the middle
 }
@@ -66,6 +68,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
     loadSongs();    //Load our songs onto the Roomba
     oi_setWheels(0, 0);
     int tripOn = 1; //!!!!!! VERY IMPORTANT, TURN OFF FOR STATIONARY TESTING ONLY !!!!!!!
+    int tripActive = 0;
     int winBoundHit = 0;
     while (1)   //While forever, or until shutoff
     {
@@ -79,32 +82,39 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 {
                 case 'W':   //If W is recieved, set the wheel speeds
                     oi_setWheels(right_wheel_speed, left_wheel_speed); //Set the wheel speeds
+                    tripActive = 1;
                     break;
                 case 'S':
                     oi_setWheels(right_wheel_speed * -1, left_wheel_speed * -1);
+                    tripActive = 0;
                     break;
                 case 'D':
                     oi_setWheels(right_wheel_speed_turn * -1,
                                  left_wheel_speed_turn);
                     timer_waitMillis(timer_30degree_calibration);
+                    tripActive = 0;
                     oi_setWheels(0, 0);
                     break;
                 case 'A':
                     oi_setWheels(right_wheel_speed_turn,
                                  left_wheel_speed_turn * -1);
                     timer_waitMillis(timer_30degree_calibration);
+                    tripActive = 0;
                     oi_setWheels(0, 0);
                     break;
                 case 'X':   //Stop the Robot
                     oi_setWheels(0, 0);
+                    tripActive = 0;
                     break;
 
                 case 'L':   //Scan command
                     scan();
+                    tripActive = 0;
                     break;
 
                 case 'Q':   //Stop the robot and make it inactive
                     oi_setWheels(0, 0);
+                    tripActive = 0;
                     active = 0;
                     break;
 
@@ -119,7 +129,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
 
             }
             updateContactSensors(); //Update the contact sensors
-            if (sensorTrip() && tripOn != 0)
+            if (sensorTrip() && tripOn != 0 && tripActive != 0)
             {   //If one of the sensors are tripped, backup and stop
                 if (bumperHitLeft())
                 {
@@ -149,6 +159,7 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 oi_setWheels(-400, -400);   //Go backwards
                 uart_sendStr(string);   //Send that the sensors have tripped
                 timer_waitMillis(300);  //Wait until we have backed up enough
+                tripActive = 0;
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
 
@@ -158,13 +169,29 @@ int main(void)  //Wifi Settings: Raw, port 288, ip 192.168.1.1,
                 sprintf(string, "WBH\n");
                 uart_sendStr(string);   //Send that the sensors have tripped
             }
-            else if (boundaryHit() && tripOn != 0 && winBoundHit == 0)
+            else if (boundaryHit() && tripOn != 0 && winBoundHit == 0 && tripActive != 0)
             {
-                sprintf(string, "BH\n");
                 //Store that the sensors have tripped
+                if ((sensor_data->cliffLeftSignal) > 2600)
+                {
+                    sprintf(string, "BHL\n");
+                }
+                else if ((sensor_data->cliffRightSignal) > 2600)
+                {
+                    sprintf(string, "BHR\n");
+                }
+                else if ((sensor_data->cliffFrontLeftSignal) > 2600)
+                {
+                    sprintf(string, "BHFL\n");
+                }
+                else if ((sensor_data->cliffFrontRightSignal) > 2600)
+                {
+                    sprintf(string, "BHFR\n");
+                }
                 oi_setWheels(-400, -400);   //Go backwards
                 uart_sendStr(string);   //Send that the sensors have tripped
                 timer_waitMillis(300);  //Wait until we have backed up enough
+                tripActive = 0;
                 oi_setWheels(0, 0); //Stop the robot until told how to move again
             }
 

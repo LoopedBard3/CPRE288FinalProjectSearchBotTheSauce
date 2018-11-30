@@ -96,7 +96,7 @@ public class Window {
 	private static void createHeatWindow(ArrayList<Integer[]> data) {
 		frame2 = new JFrame();
 		frame2.setTitle("RombaCopHeat");
-		frame2.setSize(1000, 1000);
+		frame2.setSize(1000, 400);
 
 		frame2.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
