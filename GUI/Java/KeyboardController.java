@@ -1,27 +1,48 @@
+/**
+ * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ */
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
-
+/**
+ * Handles the keyboard input from the user
+ */
 public class KeyboardController implements KeyListener {
 
+	/**
+	 * Connection to client
+	 */
     SocketController socket;
 
+	/**
+	 * Controller for keyboard
+	 */
     KeyboardController(SocketController Sock){
         super();
         socket = Sock;
     }
 
+	/**
+	 * Overrides parent methods to do nothing
+	 */
     @Override
     public void keyTyped(KeyEvent e) {
         //Do nothing
     }
 
+	/**
+	 * Overrides parent methods to do nothing
+	 */
     @Override
     public void keyPressed(KeyEvent e) {
         //Do nothing
     }
 
+	/**
+	 * Move, scan, or play music depending on what key is pressed
+	 */
     @Override
     public void keyReleased(KeyEvent e) {
         char keyInput = e.getKeyChar();

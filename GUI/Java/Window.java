@@ -1,26 +1,76 @@
+/**
+ * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ */
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.*;
 
+/**
+ * This class  is the user interface to control The Sauce
+ */
 public class Window {
 
+	/**
+	 * For graphics
+	 */
 	static GraphicsConfiguration gc;
+	/**
+	 * Move forwards
+	 */
 	static JButton btnFORWARDS;
+	/**
+	 * Move backwards
+	 */
 	static JButton btnBACKWARDS;
+	/**
+	 * Move to the left
+	 */
 	static JButton btnLEFT;
+	/**
+	 * Move to the right
+	 */
 	static JButton btnRIGHT;
+	/**
+	 * Stop moving
+	 */
 	static JButton btnSTOP;
+	/**
+	 * Stop accepting commands like scan, music, and direction
+	 */
 	static JButton btnQUIT;
+	/**
+	 * Start accepting commands
+	 */
 	static JButton btnGO;
+	/**
+	 * Scan surroundings
+	 */
 	static JButton btnSCAN;
+	/**
+	 * Play music
+	 */
 	static JButton btnMUSIC;
+	/**
+	 * Frame for buttons
+	 */
 	static JFrame frame;
+	/**
+	 * Frame for heatPanel
+	 */
 	static JFrame frame2;
+	/**
+	 * Frame for data
+	 */
 	static JFrame frame3;
+	/**
+	 * Graphics for heatmap
+	 */
 	static Graphics2D heatGraphics;
+	/**
+	 * Connect to The Sauce
+	 */
 	static SocketController client;
 	static KeyboardController keyboardController;
 	static JTextField txt;
@@ -72,6 +122,9 @@ public class Window {
 	}
 
 
+	/**
+	 * Creates a JFrame that has buttons for the user to control
+	 */
 	private static void createWindow() {
 		frame = new JFrame();
 		frame.setTitle("RombaCop");
@@ -93,6 +146,9 @@ public class Window {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Creates a JFrame with a heatmap
+	 */
 	private static void createHeatWindow(ArrayList<Integer[]> data) {
 		frame2 = new JFrame();
 		frame2.setTitle("RombaCopHeat");
@@ -110,6 +166,9 @@ public class Window {
 		frame2.setVisible(true);
 	}
 
+	/**
+	 * Creates a JFrame with a information of the data from The Sauce
+	 */
 	private static void createInfoWindow() {
 		frame3 = new JFrame();
 		frame3.setTitle("RombaCopInfo");
@@ -132,6 +191,9 @@ public class Window {
 		frame3.setVisible(true);
 	}
 
+	/**
+	 * Creates a JPanel for the first JFrame with buttons to move, scan, and play music
+	 */
 	private static JPanel createButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.setSize(500, 300);
@@ -152,6 +214,9 @@ public class Window {
 		return panel;
 	}
 
+	/**
+	 * Creates a JPanel for the second JFrame with heatmap
+	 */
 	private static JPanel createHeatPanel(ArrayList<Integer[]> data) {
 		if(data != null) {
 		JPanel panel = new JPanel() {
@@ -173,16 +238,25 @@ public class Window {
 		return new JPanel();
 	}
 
+	/**
+	 * Creates a JPanel for the third JFrame
+	 */
 	private static JPanel createInfoPanel() {
 		JPanel panel = new JPanel();
 
 		return panel;
 	}
 
+	/**
+	 * Takes input values and scales them to the output values
+	 */
 	private static float map(float x, float in_min, float in_max, float out_min, float out_max) {
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 
+	/**
+	 * Creates buttons to move The Sauce, scan whats in front, and play music
+	 */
 	private static void createBtns() {
 		btnFORWARDS = new JButton("FORWARDS");
 		btnBACKWARDS = new JButton("BACKWARDS");
