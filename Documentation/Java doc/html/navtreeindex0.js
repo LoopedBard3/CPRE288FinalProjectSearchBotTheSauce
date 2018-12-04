@@ -1,0 +1,19 @@
+var NAVTREEINDEX0 =
+{
+"_socket_controller_8java_source.html":[1,0,0],
+"_window_8java_source.html":[1,0,1],
+"annotated.html":[0,0],
+"class_socket_controller.html":[0,0,0],
+"class_socket_controller.html#a3a812b4563cf1cff149f247e9d5677a3":[0,0,0,0],
+"class_socket_controller.html#a73e0c51679b713a6ff6a265b003e5794":[0,0,0,2],
+"class_socket_controller.html#a7de8ef4fc180b2ed9e32b0dea6eb88f3":[0,0,0,3],
+"class_socket_controller.html#ab4e8320da2db8f611a402ca668785c29":[0,0,0,4],
+"class_socket_controller.html#ad7ce6469961880bd7564c54eac4f43ec":[0,0,0,1],
+"class_window.html":[0,0,1],
+"classes.html":[0,1],
+"files.html":[1,0],
+"functions.html":[0,2,0],
+"functions_func.html":[0,2,1],
+"index.html":[],
+"pages.html":[]
+};

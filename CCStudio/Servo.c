@@ -1,12 +1,35 @@
+/**
+ * @author Brandon Bui, Parker Bibus
+ * @file
+ * @brief Handles the setup for The sauce and the client
+ */
 #include "Servo.h"
 
 /*Initialization for the Servo variables*/
-unsigned period_width = 320000; // Period width of the PWM modulation
-unsigned lowCalibrate = 8000;  //may need to be changed depending on roomba
-unsigned highCalibrate = 27000; //may need to be changed depending on roomba
-unsigned timeBuffer = 20; //Buffer time before return ready in the move function
 
-//Move the servo to the specified degrees. Try also setting TBILR in this method
+/**
+ * Period width of the PWM modulation
+ */
+unsigned period_width = 320000; 
+
+/**
+ * Low Calibrate
+ */
+unsigned lowCalibrate = 8000;  
+
+/**
+ * High Calibrate
+ */
+unsigned highCalibrate = 27000; 
+
+/**
+ * Buffer time before return ready in the move function
+ */
+unsigned timeBuffer = 20; 
+
+/**
+ * Move the servo to the specified degrees. Try also setting TBILR in this method
+ */
 int move_servo(double degree)
 {
     unsigned pulse_width;    // pulse width in cycles
@@ -16,7 +39,9 @@ int move_servo(double degree)
     return 1;
 }
 
-//Set up for the Servo Motor
+/**
+ * Set up for the Servo Motor
+ */
 void setup_servo()
 {
     SYSCTL_RCGCGPIO_R |= 0x2;    //enable GPIO clock

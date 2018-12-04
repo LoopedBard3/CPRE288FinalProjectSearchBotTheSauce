@@ -1,5 +1,7 @@
 /**
  * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ * @file
+ * @brief Handles the IRSensors
  */
 #include "IRSensor.h"
 

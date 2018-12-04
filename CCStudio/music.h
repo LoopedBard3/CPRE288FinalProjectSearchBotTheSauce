@@ -11,4 +11,7 @@
 #define MARIO_THEME 2
 
 //void setup_musicSensor(oi_t *sensor_for_data);
+/**
+ * Loads songs to The Sauce
+ */
 void loadSongs();
