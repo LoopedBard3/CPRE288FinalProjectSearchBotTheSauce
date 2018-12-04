@@ -1,9 +1,14 @@
+/**
+ * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ */
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-
 import javax.swing.*;
 
+/**
+ * This class  is the user interface to control The Sauce
+ */
 public class Window{
 
 	static GraphicsConfiguration gc;
@@ -28,6 +33,9 @@ public class Window{
 		}
 	}
 
+	/**
+	 * Creates a JFrame that has buttons for the user to control
+	 */
 	private static void createWindow(){
 		JFrame frame = new JFrame();
 		frame.setTitle("RombaCop");
@@ -49,6 +57,9 @@ public class Window{
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Creates a JPanel for the first JFrame with buttons to move, scan, and play music
+	 */
 	private static JPanel createPanel(){
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.darkGray);
@@ -70,6 +81,9 @@ public class Window{
 		return panel;
 	}
 
+	/**
+	 * Creates buttons ot move The Sauce, scan whats in front, and play music
+	 */
 	private static void createBtns(){
 		btnFORWARDS= new JButton("FORWARDS");
 		btnBACKWARDS= new JButton("BACKWARDS");
