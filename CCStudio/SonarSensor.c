@@ -1,6 +1,12 @@
+/**
+ * @author Parker Bibus
+ * @file
+ * @brief Handles the Sonar sensor
+ */
 #include "SonarSensor.h"
 
 /*initialization for PING variabless*/
+
 volatile unsigned last_time = 0;
 volatile unsigned current_time = 0;
 volatile int waiting_fall_flag = 0;
@@ -8,19 +14,25 @@ volatile unsigned int overflow = 0;
 volatile unsigned int time_diff;
 volatile unsigned char ready = 0;
 
-/*Gets distance based on time*/
+/**
+ * Gets distance based on time
+ */
 unsigned cycles2dist(unsigned cycles)
 {
     return 2125 * cycles / 2000000;
 }
 
-/*changes seconds to milliseconds*/
+/**
+ * changes seconds to milliseconds
+ */
 unsigned cycles2ms(unsigned cycles)
 {
     return cycles / 16000;
 }
 
-/*sends the pulse*/
+/**
+ * sends the pulse
+ */
 void send_pulse()
 {
     TIMER3_CTL_R &= ~0x100; //Turn off Timer3
@@ -34,7 +46,9 @@ void send_pulse()
     TIMER3_CTL_R |= 0x100; //Turn Timer back on
 }
 
-/* Pings the sensor*/
+/**
+ * Pings the sensor
+ */
 unsigned ping_read()
 {
     ready = 0;
@@ -54,7 +68,9 @@ unsigned ping_read()
     return time_diff; //Get distance
 }
 
-/* ping sensor handler for the ISR */
+/**
+ * ping sensor handler for the ISR
+ */
 void TIMER3B_Handler(void)
 {
     if (!waiting_fall_flag)
@@ -72,7 +88,9 @@ void TIMER3B_Handler(void)
     }
 }
 
-//Setup for Sonar Sensor
+/**
+ * Setup for Sonar Sensor
+ */
 void setup_PING()
 {
     SYSCTL_RCGCTIMER_R |= 0x8;

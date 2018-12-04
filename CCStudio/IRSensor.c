@@ -1,6 +1,12 @@
-#include "IRSensor.h"
+/**
+ * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ * @file
+ * @brief Handles the IRSensors
+ */#include "IRSensor.h"
 
-//Gets the IR reading distance
+ /**
+  * Gets the IR reading distance
+  */
 int get_IR_dist()
 {
     int fifoResult = 0;
@@ -16,7 +22,9 @@ int get_IR_dist()
     return dist;
 }
 
-//Calculate the distance from the IR sensor.
+ /**
+  * Calculate the distance from the IR sensor.
+  */
 int IR_distance_calc(int data)
 {
     int distance = 0;
@@ -31,7 +39,9 @@ int IR_distance_calc(int data)
     return distance;
 }
 
-//Setup for IR sensor
+/**
+ * Setup for IR sensor
+ */
 void setup_IR()
 {
     SYSCTL_RCGCADC_R |= 0x3;

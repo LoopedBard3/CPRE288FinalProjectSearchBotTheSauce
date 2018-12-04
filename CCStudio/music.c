@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Music for The Sauce to play
+ */
 #include "music.h"
 
 /**
@@ -8,6 +12,9 @@
  }
  */
 
+/**
+ * Loads songs to The Sauce
+ */
 void loadSongs()
 {
     //SHARK LEN is actually supposed to be 27
