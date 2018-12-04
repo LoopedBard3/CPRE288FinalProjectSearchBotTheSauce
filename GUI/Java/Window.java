@@ -11,16 +11,49 @@ import javax.swing.*;
  */
 public class Window{
 
+	/**
+	 * For graphics
+	 */
 	static GraphicsConfiguration gc;
+	/**
+	 * Move forwards
+	 */
 	static JButton btnFORWARDS;
+	/**
+	 * Move backwards
+	 */
 	static JButton btnBACKWARDS;
+	/**
+	 * Move to the left
+	 */
 	static JButton btnLEFT;
+	/**
+	 * Move to the right
+	 */
 	static JButton btnRIGHT;
+	/**
+	 * Stop moving
+	 */
 	static JButton btnSTOP;
+	/**
+	 * Stop accepting commands like scan, music, and direction
+	 */
 	static JButton btnQUIT;
+	/**
+	 * Start accepting commands
+	 */
 	static JButton btnGO;
+	/**
+	 * Scan surroundings
+	 */
 	static JButton btnSCAN;
+	/**
+	 * Play music
+	 */
 	static JButton btnMUSIC;
+	/**
+	 * Connect to The Sauce
+	 */
 	static SocketController client;
 
 	public static void main(String[] args) throws IOException {

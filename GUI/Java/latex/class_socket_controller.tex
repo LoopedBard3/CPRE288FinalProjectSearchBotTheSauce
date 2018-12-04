@@ -1,0 +1,66 @@
+\hypertarget{class_socket_controller}{}\section{Socket\+Controller Class Reference}
+\label{class_socket_controller}\index{Socket\+Controller@{Socket\+Controller}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_socket_controller_a3a812b4563cf1cff149f247e9d5677a3}{Socket\+Controller}} (String address, int port)
+\item 
+boolean \mbox{\hyperlink{class_socket_controller_a7de8ef4fc180b2ed9e32b0dea6eb88f3}{has\+Data}} ()  throws I\+O\+Exception 
+\item 
+String \mbox{\hyperlink{class_socket_controller_a73e0c51679b713a6ff6a265b003e5794}{get\+Data}} ()  throws I\+O\+Exception 
+\item 
+void \mbox{\hyperlink{class_socket_controller_ab4e8320da2db8f611a402ca668785c29}{send\+String}} (String cmd)  throws I\+O\+Exception 
+\item 
+void \mbox{\hyperlink{class_socket_controller_ad7ce6469961880bd7564c54eac4f43ec}{close\+Connection}} ()  throws I\+O\+Exception 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class that allows us to communicate with the robot over wifi 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_socket_controller_a3a812b4563cf1cff149f247e9d5677a3}\label{class_socket_controller_a3a812b4563cf1cff149f247e9d5677a3}} 
+\index{Socket\+Controller@{Socket\+Controller}!Socket\+Controller@{Socket\+Controller}}
+\index{Socket\+Controller@{Socket\+Controller}!Socket\+Controller@{Socket\+Controller}}
+\subsubsection{\texorpdfstring{Socket\+Controller()}{SocketController()}}
+{\footnotesize\ttfamily Socket\+Controller.\+Socket\+Controller (\begin{DoxyParamCaption}\item[{String}]{address,  }\item[{int}]{port }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor for the socket controller 
+\begin{DoxyParams}{Parameters}
+{\em address} & the ip address to connect to \\
+\hline
+{\em port} & the port to connect to \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_socket_controller_ad7ce6469961880bd7564c54eac4f43ec}\label{class_socket_controller_ad7ce6469961880bd7564c54eac4f43ec}} 
+\index{Socket\+Controller@{Socket\+Controller}!close\+Connection@{close\+Connection}}
+\index{close\+Connection@{close\+Connection}!Socket\+Controller@{Socket\+Controller}}
+\subsubsection{\texorpdfstring{close\+Connection()}{closeConnection()}}
+{\footnotesize\ttfamily void Socket\+Controller.\+close\+Connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) throws I\+O\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+Closes connections with the bot \mbox{\Hypertarget{class_socket_controller_a73e0c51679b713a6ff6a265b003e5794}\label{class_socket_controller_a73e0c51679b713a6ff6a265b003e5794}} 
+\index{Socket\+Controller@{Socket\+Controller}!get\+Data@{get\+Data}}
+\index{get\+Data@{get\+Data}!Socket\+Controller@{Socket\+Controller}}
+\subsubsection{\texorpdfstring{get\+Data()}{getData()}}
+{\footnotesize\ttfamily String Socket\+Controller.\+get\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) throws I\+O\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get the data that the bot has to transmit \mbox{\Hypertarget{class_socket_controller_a7de8ef4fc180b2ed9e32b0dea6eb88f3}\label{class_socket_controller_a7de8ef4fc180b2ed9e32b0dea6eb88f3}} 
+\index{Socket\+Controller@{Socket\+Controller}!has\+Data@{has\+Data}}
+\index{has\+Data@{has\+Data}!Socket\+Controller@{Socket\+Controller}}
+\subsubsection{\texorpdfstring{has\+Data()}{hasData()}}
+{\footnotesize\ttfamily boolean Socket\+Controller.\+has\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) throws I\+O\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+Determine if the bot has data to transmit \mbox{\Hypertarget{class_socket_controller_ab4e8320da2db8f611a402ca668785c29}\label{class_socket_controller_ab4e8320da2db8f611a402ca668785c29}} 
+\index{Socket\+Controller@{Socket\+Controller}!send\+String@{send\+String}}
+\index{send\+String@{send\+String}!Socket\+Controller@{Socket\+Controller}}
+\subsubsection{\texorpdfstring{send\+String()}{sendString()}}
+{\footnotesize\ttfamily void Socket\+Controller.\+send\+String (\begin{DoxyParamCaption}\item[{String}]{cmd }\end{DoxyParamCaption}) throws I\+O\+Exception\hspace{0.3cm}{\ttfamily [inline]}}
+
+Send a character to the bot 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Socket\+Controller.\+java\end{DoxyCompactItemize}
