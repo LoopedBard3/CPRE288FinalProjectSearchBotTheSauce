@@ -1,3 +1,6 @@
+/**
+ * @author Ben Carland, Brandon Bui, Jose Lopez, Parker Bibus
+ */
 import java.net.*; 
 import java.io.*; 
 
@@ -37,12 +40,17 @@ public class SocketController {
             System.out.println(i); 
         }
     } 
-    // Determine if the bot has data to transmit
+
+    /**
+     * Determine if the bot has data to transmit
+     */
     public boolean hasData() throws IOException {
     	return botDataInput.ready();
     }
-    
-    // Get the data that the bot has to transmit
+
+    /**
+     * Get the data that the bot has to transmit
+     */
     public String getData() throws IOException {
     	if(!hasData()) {
     		return "";
@@ -50,17 +58,20 @@ public class SocketController {
     	return botDataInput.readLine();
     }
     
-    // Send a character to the bot
+    /**
+     * Send a character to the bot
+     */
     public void sendString(String cmd) throws IOException {
 		out.writeChars(cmd);
 		out.flush();
     }
     
-    // Closes connections with the bot
+    /**
+     * Closes connections with the bot
+     */
     public void closeConnection() throws IOException {
     	botDataInput.close(); 
         out.close(); 
         socket.close(); 
     }
-    
 }
